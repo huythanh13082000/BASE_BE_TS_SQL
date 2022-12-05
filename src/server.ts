@@ -29,9 +29,4 @@ const bootServer = () => {
   })
   app.use(express.json())
   app.use('/api/v1', userRoute)
-  const decode = jwt.verify(
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzOGM3ZThhZmFiODJlNWQxZjY3MTAyOSIsImlhdCI6MTY3MDE2NTY0OSwiZXhwIjoxNjcwMTY1NjY5fQ.GW_tx4LVzhVOuTlkNSXdzBb66n4CU___CVsSBiuP3qk',
-    process.env.SECRET_KEY
-  )
-  console.log(decode, new Date(1670168370))
 }
