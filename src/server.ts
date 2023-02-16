@@ -1,32 +1,32 @@
-import express from 'express'
-import dotenv from 'dotenv'
-import {connectMongoDB} from './config/mongodb'
-import {userRoute} from './routers/v1/user.route'
-const jwt = require('jsonwebtoken')
-dotenv.config()
+import express from "express";
+import { json, urlencoded } from "body-parser";
+import connection from "./config/db";
 
-const app = express()
+const app = express();
 
-console.log(process.env.APP_HOST)
+app.use(json());
 
-connectMongoDB()
+app.use(urlencoded({ extended: true }));
+
+app.use(
+  (
+    err: Error,
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction
+  ) => {
+    res.status(500).json({ message: err.message });
+  }
+);
+
+connection
+  .sync()
   .then(() => {
-    console.log('Connected successfully to database!')
+    console.log("Database successfully connected");
   })
-  .then(() => {
-    bootServer()
-  })
-  .catch((error: any) => {
-    console.log(error)
-  })
-
-const bootServer = () => {
-  const port = process.env.APP_POST
-  const host = process.env.APP_HOST
-  app.listen(port, () => {
-    console.log(`Example app listening on port ${port}`)
-    console.log(`Open http://${host}:${port}`)
-  })
-  app.use(express.json())
-  app.use('/api/v1', userRoute)
-}
+  .catch((err) => {
+    console.log("Error", err);
+  });
+app.listen(3000, () => {
+  console.log("Server started on port 3000");
+});
